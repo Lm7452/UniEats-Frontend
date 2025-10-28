@@ -44,12 +44,7 @@ function Dashboard() {
       } catch (err) {
         console.error('Error fetching user data:', err);
         setError(err.message);
-        // Redirect to login if not authenticated
-        if (err.message.includes('401')) {
-          setTimeout(() => {
-            window.location.href = `${BACKEND_URL}/login`;
-          }, 2000);
-        }
+        // Don't auto-redirect in a loop - let user manually click login
       } finally {
         setLoading(false);
       }
