@@ -1,0 +1,38 @@
+/* src/Dashboard.css */
+.dashboard-container {
+  min-height: 100vh;
+  background-color: #f4f4f4; /* Example background */
+  color: #333;
+}
+
+.dashboard-header {
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard-header .logo {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+}
+
+.user-profile span {
+  margin-right: 15px;
+}
+
+.user-profile button {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.dashboard-content {
+  padding: 20px;
+}
