@@ -1,15 +1,81 @@
 // frontend/src/Dashboard.js
-import React from 'react';
-import './Dashboard.css'; // Import a CSS file for styling
+import React, { useState, useEffect } from 'react';
+import './Dashboard.css';
 
 function Dashboard() {
-  const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000'; // Fallback for local dev
+  const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  
+  // State to store user data
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Placeholder user data - replace with fetched data later
-  const placeholderUser = {
-    name: "Tiger Student",
-    // profilePictureUrl: 'path/to/default/avatar.png' // Add later if needed
-  };
+  // Fetch user data when component mounts
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/user`, {
+          credentials: 'include' // Important: include cookies for session
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          setUser(data.user);
+        } else {
+          throw new Error(data.message || 'Failed to get user data');
+        }
+      } catch (err) {
+        console.error('Error fetching user data:', err);
+        setError(err.message);
+        // Optionally redirect to login if not authenticated
+        // window.location.href = `${BACKEND_URL}/login`;
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [BACKEND_URL]);
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="dashboard-container">
+        <header className="dashboard-header">
+          <div className="logo">
+            <span role="img" aria-label="utensils" style={{ marginRight: '8px' }}>🍴</span>
+            UniEats
+          </div>
+        </header>
+        <main className="dashboard-main">
+          <p>Loading...</p>
+        </main>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="dashboard-container">
+        <header className="dashboard-header">
+          <div className="logo">
+            <span role="img" aria-label="utensils" style={{ marginRight: '8px' }}>🍴</span>
+            UniEats
+          </div>
+        </header>
+        <main className="dashboard-main">
+          <p>Error: {error}</p>
+          <a href={`${BACKEND_URL}/login`}>Please login</a>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard-container">
@@ -24,8 +90,8 @@ function Dashboard() {
         </nav>
         <div className="user-profile">
           {/* Placeholder for profile picture */}
-          {/* <img src={placeholderUser.profilePictureUrl} alt="Profile" className="profile-pic-placeholder" /> */}
-          <span className="user-name">Welcome, {placeholderUser.name}!</span>
+          {/* <img src={user.profilePictureUrl} alt="Profile" className="profile-pic-placeholder" /> */}
+          <span className="user-name">Welcome, {user?.name || 'User'}!</span>
           <a href={`${BACKEND_URL}/logout`} className="logout-button-link">
             <button className="logout-button">Logout</button>
           </a>
