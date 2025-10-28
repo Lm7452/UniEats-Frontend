@@ -14,15 +14,27 @@ function Dashboard() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        console.log('Fetching user data from:', `${BACKEND_URL}/api/user`);
+        
         const response = await fetch(`${BACKEND_URL}/api/user`, {
-          credentials: 'include' // Important: include cookies for session
+          method: 'GET',
+          credentials: 'include', // Important: include cookies for session
+          headers: {
+            'Content-Type': 'application/json',
+          },
         });
         
+        console.log('Response status:', response.status);
+        console.log('Response ok:', response.ok);
+        
         if (!response.ok) {
-          throw new Error('Failed to fetch user data');
+          const errorText = await response.text();
+          console.error('Response error:', errorText);
+          throw new Error(`Failed to fetch user data: ${response.status}`);
         }
         
         const data = await response.json();
+        console.log('User data received:', data);
         
         if (data.success) {
           setUser(data.user);
@@ -32,8 +44,12 @@ function Dashboard() {
       } catch (err) {
         console.error('Error fetching user data:', err);
         setError(err.message);
-        // Optionally redirect to login if not authenticated
-        // window.location.href = `${BACKEND_URL}/login`;
+        // Redirect to login if not authenticated
+        if (err.message.includes('401')) {
+          setTimeout(() => {
+            window.location.href = `${BACKEND_URL}/login`;
+          }, 2000);
+        }
       } finally {
         setLoading(false);
       }
