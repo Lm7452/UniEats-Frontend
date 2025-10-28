@@ -11,7 +11,7 @@ function Dashboard() {
     // Function to fetch user profile
     const fetchProfile = async () => {
       try {
-        const response = await fetch(`${BACKEND_URL}/api/profile`, {
+        const response = await fetch(`${BACKEND_URL}/profile`, {
           credentials: 'include', // IMPORTANT: Send cookies with the request
         });
 
