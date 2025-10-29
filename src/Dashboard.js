@@ -1,111 +1,19 @@
 // frontend/src/Dashboard.js
-import React, { useState, useEffect } from 'react';
-import './Dashboard.css';
+import React from 'react';
+import './Dashboard.css'; // Import a CSS file for styling
 
 function Dashboard() {
-  const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-  
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000'; // Fallback for local dev
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        console.log('Fetching user data from:', `${BACKEND_URL}/api/user`);
-        
-        const response = await fetch(`${BACKEND_URL}/api/user`, {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        
-        console.log('Response status:', response.status);
-        
-        if (!response.ok) {
-          throw new Error(`Authentication required (${response.status})`);
-        }
-        
-        const data = await response.json();
-        console.log('User data received:', data);
-        
-        if (data.success) {
-          setUser(data.user);
-        } else {
-          throw new Error(data.message || 'Failed to get user data');
-        }
-      } catch (err) {
-        console.error('Error fetching user data:', err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserData();
-  }, [BACKEND_URL]);
-
-  if (loading) {
-    return (
-      <div className="dashboard-container">
-        <header className="dashboard-header">
-          <div className="logo">
-            <span role="img" aria-label="utensils" style={{ marginRight: '8px' }}>🍴</span>
-            UniEats
-          </div>
-        </header>
-        <main className="dashboard-main">
-          <div style={{ textAlign: 'center', padding: '40px' }}>
-            <h2>Loading your dashboard...</h2>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="dashboard-container">
-        <header className="dashboard-header">
-          <div className="logo">
-            <span role="img" aria-label="utensils" style={{ marginRight: '8px' }}>🍴</span>
-            UniEats
-          </div>
-        </header>
-        <main className="dashboard-main">
-          <div style={{ textAlign: 'center', padding: '40px' }}>
-            <h2>Authentication Required</h2>
-            <p style={{ color: '#666', marginBottom: '20px' }}>
-              You need to be logged in to view this page.
-            </p>
-            <a 
-              href={`${BACKEND_URL}/login`} 
-              style={{ 
-                display: 'inline-block',
-                padding: '12px 24px',
-                backgroundColor: '#E77500',
-                color: '#000',
-                textDecoration: 'none',
-                borderRadius: '5px',
-                fontWeight: 'bold',
-                fontSize: '1.1em'
-              }}
-            >
-              Login with Princeton
-            </a>
-            <p style={{ marginTop: '20px', fontSize: '0.9em', color: '#999' }}>
-              Error: {error}
-            </p>
-          </div>
-        </main>
-      </div>
-    );
-  }
+  // Placeholder user data - replace with fetched data later
+  const placeholderUser = {
+    name: "Tiger Student",
+    // profilePictureUrl: 'path/to/default/avatar.png' // Add later if needed
+  };
 
   return (
     <div className="dashboard-container">
+      {/* --- Top Navigation / Header --- */}
       <header className="dashboard-header">
         <div className="logo">
           <span role="img" aria-label="utensils" style={{ marginRight: '8px' }}>🍴</span>
@@ -115,13 +23,16 @@ function Dashboard() {
           {/* Add navigation links here if needed later */}
         </nav>
         <div className="user-profile">
-          <span className="user-name">Welcome, {user?.name || 'User'}!</span>
+          {/* Placeholder for profile picture */}
+          {/* <img src={placeholderUser.profilePictureUrl} alt="Profile" className="profile-pic-placeholder" /> */}
+          <span className="user-name">Welcome, {placeholderUser.name}!</span>
           <a href={`${BACKEND_URL}/logout`} className="logout-button-link">
             <button className="logout-button">Logout</button>
           </a>
         </div>
       </header>
 
+      {/* --- Main Content Area --- */}
       <main className="dashboard-main">
         <h1 className="dashboard-title">Your Dashboard</h1>
 
@@ -130,6 +41,7 @@ function Dashboard() {
           <div className="action-buttons">
             <button className="action-button">Place New Order</button>
             <button className="action-button">View Order History</button>
+            {/* Add more actions as needed */}
           </div>
         </section>
 
@@ -137,12 +49,17 @@ function Dashboard() {
           <h2>Recent Orders (Placeholder)</h2>
           <div className="order-list-placeholder">
             <p>Your recent orders will appear here.</p>
+            {/* You could add placeholder elements for individual orders */}
             <div className="placeholder-order-item">Order #1234 - Frist Grill - Delivered</div>
             <div className="placeholder-order-item">Order #1230 - Frist Grill - Picked Up</div>
           </div>
         </section>
+
+        {/* Add more sections like Settings, Favorites, etc. later */}
+
       </main>
 
+      {/* --- Footer (Optional) --- */}
       <footer className="dashboard-footer">
         UniEats &copy; 2025
       </footer>
